@@ -37,9 +37,9 @@ const Footer: React.FC = () => {
       </div>
 
       {/* Powered By Section */}
-      <div className="text-center mt-8 text-sm text-gray-400">
+      {/* <div className="text-center mt-8 text-sm text-gray-400">
         Powered by: 💬️ spofhopper
-      </div>
+      </div> */}
     </footer>
   );
 };
