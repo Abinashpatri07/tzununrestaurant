@@ -17,7 +17,7 @@ const Map: React.FC = () => {
 
       {/* Marker at Specific Location */}
       <Marker position={position}>
-        <Popup>📍 You are here! 😊</Popup>
+        <Popup>📍 You are here!</Popup>
       </Marker>
     </MapContainer>
   );
