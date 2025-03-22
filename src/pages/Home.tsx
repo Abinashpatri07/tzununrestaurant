@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React, { useEffect, useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -11,6 +11,8 @@ import Video from "../Components/Video/Video";
 const Home: React.FC = () => {
   const [sliderRef, setSliderRef] = useState<Slider | null>(null);
   const [isPlaying, setIsPlaying] = useState(true);
+  const sectionRef = useRef(null);
+  const isInView = useInView(sectionRef, { amount: 0.3 }); // Triggers when 30% of the section is in view
 
   const carouselSettings = {
     dots: true,
@@ -31,7 +33,39 @@ const Home: React.FC = () => {
     ],
   };
 
- 
+  useEffect(()=>{
+    const eleMents = document.querySelectorAll(".hide");
+    const eleMents1 = document.querySelectorAll(".hide1");
+    const eleMents3 = document.querySelectorAll(".hide3");
+    const observer = new IntersectionObserver((entries)=>{
+      entries.forEach((entry)=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add("show")
+        }else{
+          entry.target.classList.remove("show")
+        }
+      })
+    },{
+      rootMargin:"-100px"
+    })
+
+    const observer2 = new IntersectionObserver((entries)=>{
+      entries.forEach((entry)=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add("show1")
+        }else{
+          entry.target.classList.remove("show1")
+        }
+      })
+    },{
+      rootMargin:"-100px"
+    })
+
+    eleMents.forEach((ele)=>observer.observe(ele))
+    eleMents1.forEach((ele)=>observer.observe(ele))
+    eleMents3.forEach((ele)=>observer2.observe(ele))
+  },[])
+
 
   return (
     <div className="w-full min-h-screen flex flex-col bg-black overflow-hidden">
@@ -67,10 +101,10 @@ const Home: React.FC = () => {
       <div className="w-full bg-gray-900 text-white flex flex-col">
         {/* Section 1 */}
         <div className="flex flex-col md:flex-row items-center">
-          <div className="w-full md:w-1/2">
+          <div className="w-full md:w-1/2 hide">
             <img src={img} alt="Restaurant Interior" className="w-full h-auto" />
           </div>
-          <div className="w-full md:w-1/2 p-8 text-center md:text-left">
+          <div className="w-full md:w-1/2 p-8 text-center md:text-left hide3">
             <h2 className="text-3xl font-bold mb-4">BEGINNING</h2>
             <p className="text-lg">
               At T’zunun, we are more than just a restaurant; we are a celebration of family, tradition, and the vibrant flavors of Mexico.
@@ -82,10 +116,10 @@ const Home: React.FC = () => {
 
         {/* Section 2 (Image on Right) */}
         <div className="flex flex-col md:flex-row-reverse items-center">
-          <div className="w-full md:w-1/2">
+          <div className="w-full md:w-1/2 hide1">
             <img src={img1} alt="Mexican Dish" className="w-full h-auto" />
           </div>
-          <div className="w-full md:w-1/2 p-8 text-center md:text-left">
+          <div className="w-full md:w-1/2 p-8 text-center md:text-left hide3">
             <h2 className="text-3xl font-bold mb-4">OUR PASSION</h2>
             <p className="text-lg">
               Inspired by generations of culinary excellence, we have crafted a menu that honors traditional Mexican dishes while infusing them with our own unique touch. From our homemade tortillas to our flavorful salsas, every dish is prepared with love, using the finest ingredients and authentic techniques.
@@ -95,10 +129,10 @@ const Home: React.FC = () => {
 
         {/* Section 3 (Image on Left) */}
         <div className="flex flex-col md:flex-row items-center">
-          <div className="w-full md:w-1/2">
+          <div className="w-full md:w-1/2 hide">
             <img src={img2} alt="Chefs in Kitchen" className="w-full h-auto" />
           </div>
-          <div className="w-full md:w-1/2 p-8 text-center md:text-left">
+          <div className="w-full md:w-1/2 p-8 text-center md:text-left hide3">
             <h2 className="text-3xl font-bold mb-4">T'ZUNUN</h2>
             <p className="text-lg">
               In Mayan languages, T'zunun refers to hummingbird. In Mayan culture, hummingbirds are often admired for their beauty and agility. They are associated with joy, happiness, and celebration. Their presence is considered auspicious and may bring positive energy and good fortune.
@@ -108,10 +142,10 @@ const Home: React.FC = () => {
 
         {/* Section 4 (Image on Right) */}
         <div className="flex flex-col md:flex-row-reverse items-center">
-          <div className="w-full md:w-1/2">
+          <div className="w-full md:w-1/2 hide1">
             <img src={img3} alt="Restaurant Atmosphere" className="w-full h-auto" />
           </div>
-          <div className="w-full md:w-1/2 p-8 text-center md:text-left">
+          <div className="w-full md:w-1/2 p-8 text-center md:text-left hide3">
             <h2 className="text-3xl font-bold mb-4">SYNTHESIS</h2>
             <p className="text-lg">
               The T'zunun experience is a reflection of our family's passion for good food and meaningful connections. Marked by local and Mexican wines, and hand-crafted cocktails, perfectly paired with delicate, yet approachable dishes.
@@ -123,9 +157,10 @@ const Home: React.FC = () => {
       {/* Delight Section */}
       <motion.div
         className="relative w-full h-[400px] flex flex-col justify-center items-center text-white text-center bg-cover bg-center"
+        ref={sectionRef}
         style={{ backgroundImage: `url(${reservation1})` }}
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0.5, x: -50 }}
+        animate={isInView ? { opacity: 1, x: 0 } : {}}
         transition={{ duration: 1.2, ease: "easeOut" }}
       >
         <h2 className="text-4xl font-bold mb-6">DELIGHT YOUR TASTE BUDS</h2>
